@@ -3,11 +3,11 @@ const backgroundColor = 0xffececec;
 const iconColor = 0xFF888888;
 // const iconColor = 0xff5B5D8B;
 
-const baseUrl = "http://$ip/DigitalLibrary/api";
-// const baseUrl = "http://digitallibrarynun.somee.com/api";
+// const baseUrl = "http://$ip/DigitalLibrary/api";
+const baseUrl = "http://digitallibrarynun.somee.com/api";
 
-const fileBaseUrl = "http://$ip/DigitalLibrary";
-// const fileBaseUrl = "http://digitallibrarynun.somee.com";
+// const fileBaseUrl = "http://$ip/DigitalLibrary";
+const fileBaseUrl = "http://digitallibrarynun.somee.com";
 
 const ip = "192.168.178.108";
 
