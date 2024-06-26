@@ -71,54 +71,56 @@ class _StudentNamesScreenState extends State<StudentNamesScreen> {
               return ListView.builder(
                 itemCount: students.length,
                 itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (builder) => StudentLogs(
-                            studentId: students[index].studentId!,
-                            regNo: students[index].studentRegNo!,
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (builder) => StudentLogs(
+                              studentId: students[index].studentId!,
+                              regNo: students[index].studentRegNo!,
+                            ),
                           ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white,
                         ),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                      margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            children: [
-                              SizedBox(
-                                width: 180,
-                                child: Text(
-                                  students[index].studentName!,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  style: const TextStyle(fontSize: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              children: [
+                                SizedBox(
+                                  width: 180,
+                                  child: Text(
+                                    students[index].studentName!,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: const TextStyle(fontSize: 20),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              SizedBox(
-                                width: 180,
-                                child: Text(
-                                  students[index].studentRegNo!,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  style: const TextStyle(fontSize: 16),
+                                const SizedBox(
+                                  height: 3,
                                 ),
-                              ),
-                            ],
-                          )
-                        ],
+                                SizedBox(
+                                  width: 180,
+                                  child: Text(
+                                    students[index].studentRegNo!,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   );

@@ -33,40 +33,51 @@ class _MultipleEnrollmentState extends State<MultipleEnrollment> {
   }
 
   void readExcelFile(String filePath) {
-    // users.clear();
-    var file = File(filePath);
-    var bytes = file.readAsBytesSync();
-    var excel = e.Excel.decodeBytes(bytes);
+    try {
+      var file = File(filePath);
 
-    var sheet =
-        excel.tables.keys.elementAt(2); // Assuming data is in the third sheet
+      if (!file.existsSync()) {
+        return;
+      }
 
-    if (excel.tables.containsKey(sheet)) {
-      // var table = excel.tables[sheet];
-      // for (var row in table!.rows.skip(1)) {
-      // Skip header row
-      // Extract cell values
-      // var username = row[0]?.value.toString();
-      // var password = row[1]?.value.toString();
-      // var role = row[2]?.value.toString();
-      // var department = row[3]?.value.toString();
-      // var name = row[4]?.value.toString();
-      // var phoneNo = row[5]?.value.toString();
+      var bytes = file.readAsBytesSync();
+      var excel = e.Excel.decodeBytes(bytes);
 
-      // Create BulkUserModel instance and add to list
-      // var user = BulkUserModel(
-      //   username: username,
-      //   password: password,
-      //   role: role,
-      //   department: department,
-      //   name: name,
-      //   phoneNo: phoneNo,
-      // );
-      // users.add(user);
+      if (excel.tables.isEmpty) {
+        return;
+      }
+
+      // var sheet =
+      //     excel.tables.keys.elementAt(2); // Assuming data is in the third sheet
+      // if (excel.tables.containsKey(sheet)) {
+      //   var table = excel.tables[sheet];
+      //   for (var row in table!.rows.skip(1)) {
+      //     // Skip header row
+      //     // Extract cell values
+      //     var username = row[0]?.value.toString();
+      //     var password = row[1]?.value.toString();
+      //     var role = row[2]?.value.toString();
+      //     var department = row[3]?.value.toString();
+      //     var name = row[4]?.value.toString();
+      //     var phoneNo = row[5]?.value.toString();
+
+      //     // Create BulkUserModel instance and add to list
+      //     var user = BulkUserModel(
+      //       username: username,
+      //       password: password,
+      //       role: role,
+      //       department: department,
+      //       name: name,
+      //       phoneNo: phoneNo,
+      //     );
+      //     // users.add(user);
+      //   }
+      //   setState(() {});
+      // } else {
+      //   debugPrint("Sheet not found");
       // }
-      setState(() {});
-    } else {
-      debugPrint("Sheet not found");
+    } catch (e) {
+      //
     }
   }
 
@@ -132,7 +143,7 @@ class _MultipleEnrollmentState extends State<MultipleEnrollment> {
                     if (filePath == null) {
                       // showSnackBar("Select File First");
                     } else {
-                      // readExcelFile(filePath!);
+                      readExcelFile(filePath!);
                     }
                   },
                 )

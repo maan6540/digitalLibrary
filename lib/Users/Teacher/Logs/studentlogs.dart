@@ -69,12 +69,70 @@ class _StudentLogsState extends State<StudentLogs> {
                 child: Text(message),
               );
             } else {
-              return const ListTile(
-                title: Text("Book"),
+              return ListView.builder(
+                itemCount: logs.length,
+                itemBuilder: (context, index) {
+                  return LogsTile(logs: logs[index]);
+                },
               );
             }
           }
         },
+      ),
+    );
+  }
+}
+
+class LogsTile extends StatelessWidget {
+  const LogsTile({super.key, required this.logs});
+  final LogsModel logs;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: Column(
+        children: [
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+            child: const Text(
+              style: TextStyle(fontSize: 20),
+              "Book ",
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  const Text(
+                    "Start Time",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(logs.startTime!)
+                ],
+              ),
+              const SizedBox(
+                width: 50,
+              ),
+              const Column(
+                children: [
+                  Text(
+                    "End Time",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  // Text(logs.endTime!)
+                ],
+              )
+            ],
+          )
+        ],
       ),
     );
   }

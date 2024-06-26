@@ -106,6 +106,11 @@ class _DownloadedBookScreenState extends State<DownloadedBookScreen> {
                 child: Text("No Books Downloaded"),
               );
             } else {
+              books = books
+                  .where(
+                    (element) => element.userId == widget.id,
+                  )
+                  .toList();
               return ListView.builder(
                 itemCount: books.length,
                 itemBuilder: (context, index) {

@@ -55,7 +55,7 @@ class _StudentCoursesState extends State<StudentCourses> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(backgroundColor),
-      appBar: MyAppBar(title: "Courses ${widget.studentId}"),
+      appBar: const MyAppBar(title: "Courses"),
       body: FutureBuilder(
         future: futureCourses,
         builder: (context, snapshot) {

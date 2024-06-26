@@ -70,7 +70,6 @@ class _LoginScreenState extends State<LoginScreen> {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           Map<String, dynamic> data = responseBody["data"][0];
           debugPrint(data["role"]);
-          print(data["isFirstLogin"]);
           if (data["role"] == "Student") {
             prefs.setString("regNo", data["regNo"]);
             prefs.setString("role", "Student");
@@ -295,9 +294,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               // }
                             },
                             style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white),
-                              backgroundColor: MaterialStateProperty.all<Color>(
+                              foregroundColor:
+                                  WidgetStateProperty.all<Color>(Colors.white),
+                              backgroundColor: WidgetStateProperty.all<Color>(
                                   const Color(mainColor)),
                             ),
                             child: const Text(

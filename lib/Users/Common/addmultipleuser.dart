@@ -19,8 +19,8 @@ class AddMultipleUsers extends StatefulWidget {
 
 class _AddMultipleUsersState extends State<AddMultipleUsers> {
   String file = "No File Selected";
-  String? filePath;
   List<BulkUserModel> users = [];
+  String? filePath;
 
   Future<void> selectFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -42,6 +42,7 @@ class _AddMultipleUsersState extends State<AddMultipleUsers> {
     users.clear();
     var file = File(filePath);
     var bytes = file.readAsBytesSync();
+    // print(bytes);
     var excel = e.Excel.decodeBytes(bytes);
 
     var sheet =

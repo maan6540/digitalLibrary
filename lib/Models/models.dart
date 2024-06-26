@@ -340,8 +340,8 @@ class HighlightModel {
 }
 
 class LogsModel {
-  DateTime? startTime;
-  DateTime? endTime;
+  String? startTime;
+  String? endTime;
   String? actionPerformed;
   String? itemName;
   String? itemType;
@@ -354,8 +354,8 @@ class LogsModel {
       this.itemType});
 
   LogsModel.fromJson(Map<String, dynamic> json) {
-    startTime = DateTime.parse(json['startTime']);
-    endTime = DateTime.parse(json['endTime']);
+    startTime = json['startTime'];
+    endTime = json['endTime'];
     actionPerformed = json['actionPerformed'];
     itemName = json['itemName'];
     itemType = json['itemType'];
@@ -363,11 +363,16 @@ class LogsModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['startTime'] = startTime?.toIso8601String();
-    data['endTime'] = endTime?.toIso8601String();
+    data['startTime'] = startTime;
+    data['endTime'] = endTime;
     data['actionPerformed'] = actionPerformed;
     data['itemName'] = itemName;
     data['itemType'] = itemType;
     return data;
   }
 }
+
+
+// String dateString = '6/11/2024 2:44:49 AM';
+// DateTime parsedDate = DateTime.parse(dateString);
+// print(parsedDate);
