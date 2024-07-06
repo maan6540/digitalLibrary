@@ -7,6 +7,7 @@ import 'package:digitallibrary/CustomWidgets/mybutton.dart';
 import 'package:digitallibrary/CustomWidgets/mydialog.dart';
 import 'package:digitallibrary/CustomWidgets/mytextfield.dart';
 import 'package:digitallibrary/Models/models.dart';
+import 'package:digitallibrary/Users/Common/addmultipletoc.dart';
 import 'package:digitallibrary/constants/constants.dart';
 
 import 'package:flutter/material.dart';
@@ -139,7 +140,18 @@ class _AddBookTocState extends State<AddBookToc> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: const MyAppBar(title: "Add TOC"),
+      appBar: MyAppBar(
+        title: "Add TOC",
+        onPress: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (builder) => AddMultipleToc(
+                        bookId: widget.bookId,
+                      )));
+        },
+        icon: Icons.add,
+      ),
       body: Column(
         children: [
           MyTextField(

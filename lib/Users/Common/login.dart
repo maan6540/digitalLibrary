@@ -140,8 +140,8 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       debugPrint(e.toString());
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Server Down"),
+        SnackBar(
+          content: Text("Server Down ${e.toString()}"),
         ),
       );
     }
@@ -150,18 +150,18 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  // String? _validateUsername(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Username is required';
-  //   }
-  //   if (!RegExp(r"^[^@]+@nun\.com$").hasMatch(value) &&
-  //       !RegExp(r"^\d{3}-NUN-\d{4}$").hasMatch(value)) {
-  //     return 'Invalid Username or RegNo format';
-  //   }
-  //   return null;
-  // }
+  String? _validateUsername(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Username is required';
+    }
+    if (!RegExp(r"^[^@]+@nun\.com$").hasMatch(value) &&
+        !RegExp(r"^\d{3}-NUN-\d{4}$").hasMatch(value)) {
+      return 'Invalid Username or RegNo format';
+    }
+    return null;
+  }
 
-  // final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -228,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Container(
                           margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                           child: Form(
-                            // key: _formKey,
+                            key: _formKey,
                             child: Column(
                               children: [
                                 TextFormField(
@@ -243,9 +243,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     hintText: "UserName",
                                     contentPadding: EdgeInsets.only(
-                                        left: 15), // Added padding here
+                                      left: 15,
+                                    ),
                                   ),
-                                  // validator: _validateUsername,
+                                  validator: _validateUsername,
                                 ),
                                 const SizedBox(
                                   height: 5,
@@ -289,9 +290,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 50,
                           child: ElevatedButton(
                             onPressed: () {
-                              // if (_formKey.currentState!.validate()) {
-                              login();
-                              // }
+                              if (_formKey.currentState!.validate()) {
+                                login();
+                              }
                             },
                             style: ButtonStyle(
                               foregroundColor:
