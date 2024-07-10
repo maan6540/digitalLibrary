@@ -4,6 +4,7 @@ import 'package:digitallibrary/CustomWidgets/myappbar.dart';
 import 'package:digitallibrary/CustomWidgets/mybutton.dart';
 import 'package:digitallibrary/CustomWidgets/mytextfield.dart';
 import 'package:digitallibrary/Models/models.dart';
+import 'package:digitallibrary/Users/Admin/courseManagment/addmultiplecourses.dart';
 import 'package:digitallibrary/constants/constants.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -153,7 +154,16 @@ class _AddEditCourseState extends State<AddEditCourse> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: MyAppBar(title: "${widget.type} Course"),
+      appBar: MyAppBar(
+        title: "${widget.type} Course",
+        onPress: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (builder) => const AddMultipleCourses()));
+        },
+        icon: Icons.add,
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,

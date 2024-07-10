@@ -73,6 +73,7 @@ class _StudentCoursesState extends State<StudentCourses> {
                 itemCount: courses.length,
                 itemBuilder: (context, index) {
                   return TeacherStudentCourseTile(
+                    studentId: widget.studentId,
                     course: courses[index],
                     onPressed: (p0) {
                       Navigator.push(

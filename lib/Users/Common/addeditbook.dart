@@ -5,6 +5,7 @@ import 'package:digitallibrary/CustomWidgets/mybutton.dart';
 import 'package:digitallibrary/CustomWidgets/mydropdown.dart';
 import 'package:digitallibrary/CustomWidgets/mytextfield.dart';
 import 'package:digitallibrary/Models/models.dart';
+import 'package:digitallibrary/Users/Common/addmultiplebooks.dart';
 import 'package:digitallibrary/constants/constants.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -231,13 +232,13 @@ class _AddEditBookState extends State<AddEditBook> {
     return Scaffold(
       appBar: MyAppBar(
         title: "${widget.type} Book",
-        // onPress: () {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (builder) => const AddMultipleBooks()));
-        // },
-        // icon: Icons.add,
+        onPress: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (builder) => const AddMultipleBooks()));
+        },
+        icon: Icons.add,
       ),
       body: SingleChildScrollView(
         child: Column(

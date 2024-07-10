@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 
 class TeacherStudentCourseTile extends StatelessWidget {
   const TeacherStudentCourseTile(
-      {super.key, required this.course, required this.onPressed});
+      {super.key,
+      required this.course,
+      required this.onPressed,
+      this.studentId});
   final CourseModel course;
+  final int? studentId;
   final Function(String) onPressed;
 
   @override
@@ -68,6 +72,7 @@ class TeacherStudentCourseTile extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ViewPdfFileScreen(
+                      studentId: studentId!,
                       path:
                           "$fileBaseUrl/CourseContentFolder/${course.courseContentUriPath!}",
                       name: course.courseCode!,

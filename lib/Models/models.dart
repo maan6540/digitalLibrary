@@ -78,18 +78,21 @@ class CourseModel {
   String? courseName;
   String? courseContentUriPath;
   String? creditHours;
+  String? status;
 
   CourseModel(
       {this.courseCode,
       this.courseName,
       this.courseContentUriPath,
-      this.creditHours});
+      this.creditHours,
+      this.status});
 
   CourseModel.fromJson(Map<String, dynamic> json) {
     courseCode = json['courseCode'];
     courseName = json['courseName'];
     courseContentUriPath = json['courseContentUriPath'];
     creditHours = json['creditHours'];
+    status = json['status'];
   }
 }
 

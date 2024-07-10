@@ -7,16 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const MyAppBar(
-      {super.key,
-      required this.title,
-      this.height = 60,
-      this.onPress,
-      this.icon});
+  const MyAppBar({
+    super.key,
+    required this.title,
+    this.height = 60,
+    this.onPress,
+    this.icon,
+    this.isNotPdf = "Yes",
+  });
   final double? height;
   final String title;
   final IconData? icon;
   final VoidCallback? onPress;
+  final String? isNotPdf;
 
   Future<void> logout(BuildContext context) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -51,29 +54,30 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 icon,
                 color: Colors.white,
               )),
-        IconButton(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (builder) {
-                    return MyDialog(
-                      icon: Icons.warning,
-                      title: "Logout",
-                      content: "Are you sure to logout",
-                      cancelBtn: "No",
-                      okbtn: "Yes",
-                      functionOkbtn: () async {
-                        await logout(context);
-                        // Navigator.pop(context);
-                      },
-                      btncount: 2,
-                    );
-                  });
-            },
-            icon: const Icon(
-              Icons.login,
-              color: Colors.white,
-            ))
+        if (isNotPdf == "Yes")
+          IconButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (builder) {
+                      return MyDialog(
+                        icon: Icons.warning,
+                        title: "Logout",
+                        content: "Are you sure to logout",
+                        cancelBtn: "No",
+                        okbtn: "Yes",
+                        functionOkbtn: () async {
+                          await logout(context);
+                          // Navigator.pop(context);
+                        },
+                        btncount: 2,
+                      );
+                    });
+              },
+              icon: const Icon(
+                Icons.login,
+                color: Colors.white,
+              ))
       ],
     );
   }

@@ -18,7 +18,6 @@ class ViewPdfFileOffline extends StatefulWidget {
 
 class _ViewPdfFileOfflineState extends State<ViewPdfFileOffline> {
   late PdfViewerController _pdfViewerController;
-
   @override
   void initState() {
     _pdfViewerController = PdfViewerController();
@@ -27,6 +26,7 @@ class _ViewPdfFileOfflineState extends State<ViewPdfFileOffline> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.path);
     return Scaffold(
       appBar: MyAppBar(
         title: widget.name,

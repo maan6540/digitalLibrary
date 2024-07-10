@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:digitallibrary/Users/Common/viewpdffileoffline.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:digitallibrary/CustomWidgets/myappbar.dart';
 import 'package:digitallibrary/CustomWidgets/mybutton.dart';
@@ -136,8 +137,8 @@ class _AddMultipleBooksState extends State<AddMultipleBooks> {
         var type = row[4]?.value.toString();
         var coverPage = row[5]?.value.toString();
         var bookPdf = row[6]?.value.toString();
-        var coverPagePath = "/storage/emulated/0/book/$coverPage";
         var bookPdfPath = "/storage/emulated/0/book/$bookPdf";
+        var coverPagePath = "/storage/emulated/0/book/$coverPage";
         BookModel book = BookModel(
             bookName: title,
             bookAuthorName: authors,
@@ -254,7 +255,14 @@ class _AddMultipleBooksState extends State<AddMultipleBooks> {
                         return MyDownloadedBookTile(
                           isMultiple: "Yes",
                           book: books[index],
-                          ftn1: (id) {},
+                          ftn1: (id) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (builder) => ViewPdfFileOffline(
+                                        path: books[index].bookPdfPath!,
+                                        name: "name")));
+                          },
                           icon1: Icons.edit,
                           ftn3: (id) {
                             setState(() {

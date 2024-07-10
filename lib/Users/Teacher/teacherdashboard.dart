@@ -11,7 +11,7 @@ import 'package:digitallibrary/Users/Common/login.dart';
 import 'package:digitallibrary/Users/Common/studentteacherprofile.dart';
 import 'package:digitallibrary/Users/Teacher/Books/teacherbookscreen.dart';
 import 'package:digitallibrary/Users/Teacher/Courses/teachercourses.dart';
-import 'package:digitallibrary/Users/Teacher/Logs/studentlogsscreen.dart';
+import 'package:digitallibrary/Users/Teacher/Logs/studentlogsscreensmesters.dart';
 import 'package:digitallibrary/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -22,6 +22,7 @@ class DownloadedBookScreen extends StatefulWidget {
 class _DownloadedBookScreenState extends State<DownloadedBookScreen> {
   late Future<List<BookModel>> futurebooks;
   List<BookModel> books = [];
+  TextEditingController searchController = TextEditingController();
 
   Future<List<BookModel>> getDownloadedBooks() async {
     try {
@@ -49,10 +50,16 @@ class _DownloadedBookScreenState extends State<DownloadedBookScreen> {
       }
       await deleteFile(books[index].bookCoverPagePath!);
       await deleteFile(books[index].bookPdfPath!);
-      data.removeAt(index);
+      data.removeWhere((item) {
+        // Assuming item is a JSON string that contains bookPdfPath
+        var bookData = json.decode(item);
+        return bookData['bookPdfPath'] == books[index].bookPdfPath;
+      });
       pref.setStringList('books', data);
       books.removeAt(index);
-      setState(() {});
+      setState(() {
+        futurebooks = getDownloadedBooks();
+      });
       showSnackBar("Book Deleted");
     } catch (e) {
       debugPrint(e.toString());
@@ -78,6 +85,16 @@ class _DownloadedBookScreenState extends State<DownloadedBookScreen> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
+  List<BookModel> filterBooks(String query) {
+    if (query.isEmpty) return books;
+    return books.where((book) {
+      return book.bookName!.toLowerCase().contains(query.toLowerCase()) ||
+          book.bookAuthorName!.toLowerCase().contains(query.toLowerCase()) ||
+          (book.bookKeywords != null &&
+              book.bookKeywords!.toLowerCase().contains(query.toLowerCase()));
+    }).toList();
+  }
+
   @override
   void initState() {
     futurebooks = getDownloadedBooks();
@@ -85,71 +102,112 @@ class _DownloadedBookScreenState extends State<DownloadedBookScreen> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(backgroundColor),
-      body: FutureBuilder(
-        future: futurebooks,
-        builder: (context, AsyncSnapshot<List<BookModel>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else {
-            books = snapshot.data ?? [];
-            if (books.isEmpty) {
-              return const Center(
-                child: Text("No Books Downloaded"),
-              );
-            } else {
-              books = books
-                  .where(
-                    (element) => element.userId == widget.id,
-                  )
-                  .toList();
-              return ListView.builder(
-                itemCount: books.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (builder) => ViewPdfFileOffline(
-                              path: books[index].bookPdfPath!,
-                              name: books[index].bookName!),
-                        ),
-                      );
-                    },
-                    child: MyDownloadedBookTile(
-                      book: books[index],
-                      icon1: Icons.delete,
-                      ftn1: (id) {
-                        deleteDownloadedBook(index);
-                      },
-                      icon3: Icons.list,
-                      ftn3: (p0) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (builder) => ViewDownloadedBookToc(
-                              bookId: p0,
-                              book: books[index],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: searchController,
+              decoration: const InputDecoration(
+                hintText: 'Search books...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                suffixIcon: Icon(Icons.search),
+              ),
+              onChanged: (value) {
+                setState(
+                    () {}); // Trigger a rebuild whenever the search query changes
+              },
+            ),
+          ),
+          Expanded(
+            child: FutureBuilder<List<BookModel>>(
+              future: futurebooks,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
-                },
-              );
-            }
-          }
-        },
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                } else {
+                  books = snapshot.data ?? [];
+                  if (books.isEmpty) {
+                    return const Center(
+                      child: Text("No Books Downloaded"),
+                    );
+                  } else {
+                    books = books
+                        .where((element) => element.userId == widget.id)
+                        .toList();
+                    if (books.isEmpty) {
+                      return const Center(
+                        child: Text("No Books Downloaded"),
+                      );
+                    } else {
+                      List<BookModel> filteredBooks =
+                          filterBooks(searchController.text);
+                      List<BookModel> displayBooks =
+                          searchController.text.isEmpty ? books : filteredBooks;
+
+                      if (displayBooks.isEmpty) {
+                        return const Center(
+                          child: Text("No Books Found"),
+                        );
+                      } else {
+                        return ListView.builder(
+                          itemCount: displayBooks.length,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (builder) => ViewPdfFileOffline(
+                                      path: displayBooks[index].bookPdfPath!,
+                                      name: displayBooks[index].bookName!,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: MyDownloadedBookTile(
+                                book: displayBooks[index],
+                                icon1: Icons.delete,
+                                ftn1: (id) {
+                                  deleteDownloadedBook(index);
+                                },
+                                icon3: Icons.list,
+                                ftn3: (p0) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (builder) =>
+                                          ViewDownloadedBookToc(
+                                        bookId: p0,
+                                        book: displayBooks[index],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    }
+                  }
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

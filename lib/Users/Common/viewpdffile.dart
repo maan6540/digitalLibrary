@@ -31,13 +31,95 @@ class ViewPdfFileScreen extends StatefulWidget {
   ViewPdfFileScreenState createState() => ViewPdfFileScreenState();
 }
 
-class ViewPdfFileScreenState extends State<ViewPdfFileScreen> {
+class ViewPdfFileScreenState extends State<ViewPdfFileScreen>
+    with WidgetsBindingObserver {
   late PdfViewerController _pdfViewerController;
+
+  String startTime = "";
+
+  void createLog() async {
+    if (DateTime.now().difference(DateTime.parse(startTime)) <
+            const Duration(seconds: 10) &&
+        widget.user == "Student") {
+      return;
+    }
+    if (widget.itemId == 0) {
+      return;
+    }
+
+    try {
+      String url = "$baseUrl/Logs/createLog";
+      var response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode(
+          {
+            "type": "Start",
+            "studentId": widget.studentId,
+            "logItemType": widget.screenof,
+            "logItemId": widget.itemId,
+            "actionPerformed": "Reading",
+            "startTime": startTime,
+            "endTime": DateTime.now().toString(),
+          },
+        ),
+      );
+      print(response.body);
+      if (response.statusCode == 200) {
+        var responsebody = jsonDecode(response.body);
+        if (responsebody['status'] == "Success") {
+          debugPrint("Log Created");
+          const Duration(seconds: 3);
+          startTime = DateTime.now().toString();
+        } else {
+          debugPrint("Error : ${responsebody['message']}");
+        }
+      } else {
+        debugPrint("Error : ${response.statusCode}");
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 
   @override
   void initState() {
+    startTime = DateTime.now().toString();
     _pdfViewerController = PdfViewerController();
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    createLog();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    createLog();
+    if (AppLifecycleState.resumed == state) {
+      startTime = DateTime.now().toString();
+      print(startTime);
+    }
+    // switch (state) {
+    //   case AppLifecycleState.inactive:
+    //     print("ViewPdfFileScreen is inactive");
+    //     break;
+    //   case AppLifecycleState.paused:
+    //     print("ViewPdfFileScreen is paused");
+    //     createLog();
+    //     break;
+    //   case AppLifecycleState.resumed:
+    //     print("ViewPdfFileScreen is resumed");
+    //     break;
+    //   case AppLifecycleState.detached:
+    //     print("ViewPdfFileScreen is detached");
+    //     break;
+    // }
   }
 
   Future<void> addHighlight(
@@ -58,6 +140,7 @@ class ViewPdfFileScreenState extends State<ViewPdfFileScreen> {
           },
         ),
       );
+
       if (response.statusCode == 200) {
         var responsebody = jsonDecode(response.body);
         showSnackBar(responsebody['message']);
@@ -143,6 +226,7 @@ class ViewPdfFileScreenState extends State<ViewPdfFileScreen> {
     return Scaffold(
       appBar: MyAppBar(
         title: widget.name,
+        isNotPdf: "No",
       ),
       body: GestureDetector(
         onDoubleTap: () {

@@ -5,6 +5,7 @@ import 'package:digitallibrary/Models/models.dart';
 import 'package:digitallibrary/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class StudentLogs extends StatefulWidget {
   const StudentLogs({super.key, required this.studentId, required this.regNo});
@@ -64,6 +65,7 @@ class _StudentLogsState extends State<StudentLogs> {
             );
           } else {
             logs = snapshot.data!;
+            logs = logs.reversed.toList();
             if (logs.isEmpty) {
               return Center(
                 child: Text(message),
@@ -89,6 +91,16 @@ class LogsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // DateTime startDateTime = DateTime.parse(logs.startTime!);
+    // DateTime endDateTime = DateTime.parse(logs.endTime!);
+    String startDate =
+        DateFormat('dd-MM-yyyy').format(DateTime.parse(logs.startTime!));
+    String startTime =
+        DateFormat('hh:mm a').format(DateTime.parse(logs.startTime!));
+    String endDate =
+        DateFormat('dd-MM-yyyy').format(DateTime.parse(logs.endTime!));
+    String endTime =
+        DateFormat('hh:mm a').format(DateTime.parse(logs.endTime!));
     return Container(
       margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
       decoration: BoxDecoration(
@@ -100,11 +112,15 @@ class LogsTile extends StatelessWidget {
           Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-            child: const Text(
-              style: TextStyle(fontSize: 20),
-              "Book ",
+            child: Text(
+              style: const TextStyle(fontSize: 20),
+              logs.itemName!,
               overflow: TextOverflow.ellipsis,
             ),
+          ),
+          const Text(
+            "<<--------⨷-------->>",
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -115,22 +131,27 @@ class LogsTile extends StatelessWidget {
                     "Start Time",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(logs.startTime!)
+                  Text("Date : $startDate"),
+                  Text("Time : $startTime"),
                 ],
               ),
               const SizedBox(
                 width: 50,
               ),
-              const Column(
+              Column(
                 children: [
-                  Text(
+                  const Text(
                     "End Time",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  // Text(logs.endTime!)
+                  Text("Date : $endDate"),
+                  Text("Time : $endTime"),
                 ],
-              )
+              ),
             ],
+          ),
+          const SizedBox(
+            height: 10,
           )
         ],
       ),

@@ -36,7 +36,7 @@ class _StudentEnrollmentScreenState extends State<StudentEnrollmentScreen> {
 
   Future<List<EnrolledCoursesModel>> getEnrolledCourses() async {
     String url =
-        "$baseUrl/enrollment/getEnrollment?studentId=${widget.studentId}&year=${DateTime.now().year}&month=4";
+        "$baseUrl/enrollment/getEnrollment?studentId=${widget.studentId}&year=${DateTime.now().year}&month=${DateTime.now().month}";
     try {
       var response = await http.get(Uri.parse(url), headers: headers);
       if (response.statusCode == 200) {
