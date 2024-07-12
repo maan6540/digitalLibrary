@@ -1,7 +1,7 @@
 import 'package:digitallibrary/CustomWidgets/myappbar.dart';
 import 'package:digitallibrary/Users/Student/Course/SubScreens/studentcoursebooks.dart';
 import 'package:digitallibrary/Users/Student/Course/SubScreens/studentlessonplan.dart';
-import 'package:digitallibrary/Users/Teacher/Courses/SubScreens/weeklpscreen.dart';
+import 'package:digitallibrary/Users/Teacher/Courses/SubScreens/sharedreferences.dart';
 import 'package:digitallibrary/constants/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +47,7 @@ class _StudentCourseMainScreeState extends State<StudentCourseMainScree>
               tabs: [
                 tabBar("Books"),
                 tabBar("Weekly LP"),
-                tabBar("My Lesson Plan")
+                tabBar("References")
               ],
               labelColor: Colors.white,
               unselectedLabelColor: const Color(mainColor),
@@ -64,10 +64,9 @@ class _StudentCourseMainScreeState extends State<StudentCourseMainScree>
                 StudentCourseBooks(
                     courseCode: widget.courseCode, id: widget.studentId),
                 StudentWeekLp(courseCode: widget.courseCode),
-                WeekLPSubScreen(
+                AddReferencesMainScreen(
                   courseCode: widget.courseCode,
                   id: widget.studentId,
-                  user: "Student",
                 ),
               ],
             ),

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:digitallibrary/CustomWidgets/myappbar.dart';
 import 'package:digitallibrary/CustomWidgets/mybutton.dart';
 import 'package:digitallibrary/CustomWidgets/mytextfield.dart';
 import 'package:digitallibrary/Models/models.dart';
@@ -233,6 +234,7 @@ class _WeekLPSubScreenState extends State<WeekLPSubScreen> {
                         itemBuilder: (context, index) {
                           return WeekLPTile(
                             weeklp: weekLp[index],
+                            urse: widget.user!,
                             onDelete: (p0) {
                               deleteLessonPlan(index, p0);
                             },
@@ -245,6 +247,16 @@ class _WeekLPSubScreenState extends State<WeekLPSubScreen> {
                                 lessonPlanPdfController.text =
                                     weekLp[index].lessonPlanPdfPatn!;
                               });
+                            },
+                            onshare: (id) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (builder) =>
+                                          ShowShareStudentsScreen(
+                                              studentId: widget.id,
+                                              courseCode: widget.courseCode,
+                                              referenceId: id)));
                             },
                           );
                         },
@@ -262,14 +274,19 @@ class _WeekLPSubScreenState extends State<WeekLPSubScreen> {
 }
 
 class WeekLPTile extends StatelessWidget {
-  const WeekLPTile(
-      {super.key,
-      required this.weeklp,
-      required this.onDelete,
-      required this.onEdit});
+  const WeekLPTile({
+    super.key,
+    required this.weeklp,
+    required this.onDelete,
+    required this.onEdit,
+    required this.onshare,
+    this.urse = "Student",
+  });
   final WeekLPModel weeklp;
   final Function(int) onEdit;
   final Function(int) onDelete;
+  final Function(int) onshare;
+  final String? urse;
 
   @override
   Widget build(BuildContext context) {
@@ -293,12 +310,21 @@ class WeekLPTile extends StatelessWidget {
         child: Row(
           children: [
             SizedBox(
-              width: 180,
+              width: 130,
               child: Text(weeklp.lessonPlanTitle!),
             ),
             const SizedBox(
               width: 10,
             ),
+            if (urse == "Student9")
+              IconButton(
+                onPressed: () {
+                  onshare(weeklp.lessonPlanId!);
+                },
+                icon: const Icon(
+                  Icons.share,
+                ),
+              ),
             IconButton(
               onPressed: () {
                 onEdit(weeklp.lessonPlanId!);
@@ -319,5 +345,180 @@ class WeekLPTile extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class ShowShareStudentsScreen extends StatefulWidget {
+  const ShowShareStudentsScreen(
+      {super.key,
+      required this.studentId,
+      required this.courseCode,
+      required this.referenceId});
+  final int studentId;
+  final String courseCode;
+  final int referenceId;
+
+  @override
+  State<ShowShareStudentsScreen> createState() =>
+      _ShowShareStudentsScreenState();
+}
+
+class _ShowShareStudentsScreenState extends State<ShowShareStudentsScreen> {
+  String message = "";
+  List<ShareStudentsModel> students = [];
+  late Future<List<ShareStudentsModel>> futureStudents;
+
+  List<int> SelectedStudentIds = [];
+  List<bool> value = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ];
+
+  Future<List<ShareStudentsModel>> getStudents() async {
+    String url =
+        "$baseUrl/Sharing/getStudents?studentId=${widget.studentId}&courseCode=${widget.courseCode}";
+    try {
+      var response = await http.get(Uri.parse(url), headers: headers);
+      if (response.statusCode == 200) {
+        var responseBody = jsonDecode(response.body);
+        if (responseBody['status'] == "Success") {
+          List<dynamic> responsedata = responseBody["data"];
+          var data =
+              responsedata.map((e) => ShareStudentsModel.fromJson(e)).toList();
+          return data;
+        } else {
+          message = responseBody["message"];
+        }
+      } else {
+        message = "Error ${response.statusCode}";
+      }
+    } catch (e) {
+      message = "Server Down";
+      debugPrint(e.toString());
+    }
+    return [];
+  }
+
+  Future<void> share() async {
+    String url = "$baseUrl/Sharing/AddSharing";
+    try {
+      var jsonbody = jsonEncode({
+        "referenceId": widget.referenceId,
+        "sharedById": widget.studentId,
+        "courseCode": widget.courseCode,
+        "studentIds": SelectedStudentIds
+      });
+      print(jsonbody);
+      var response =
+          await http.post(Uri.parse(url), headers: headers, body: jsonbody);
+
+      if (response.statusCode == 200) {
+        var responsebody = jsonDecode(response.body);
+        if (responsebody['status'] == "Success") {
+          showSnackBar("References Shared");
+        } else {
+          showSnackBar("Failed to Send Refrences");
+        }
+      } else {
+        showSnackBar("Error Occured");
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      showSnackBar("Server Down");
+    }
+  }
+
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  @override
+  void initState() {
+    futureStudents = getStudents();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const MyAppBar(title: "Students List"),
+      body: Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.sizeOf(context).height * 0.75,
+            child: FutureBuilder(
+              future: futureStudents,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting ||
+                    snapshot.connectionState == ConnectionState.active) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  students = snapshot.data!;
+                  if (students.isEmpty) {
+                    return Center(
+                      child: Text(message),
+                    );
+                  } else {
+                    return ListView.builder(
+                      itemCount: students.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(students[index].studentName!),
+                          leading: Checkbox(
+                              value: value[index],
+                              onChanged: (id) {
+                                setState(() {
+                                  value[index] = !value[index];
+                                });
+                                if (value[index]) {
+                                  SelectedStudentIds.add(
+                                      students[index].studentId!);
+                                } else {
+                                  SelectedStudentIds.remove(
+                                      students[index].studentId!);
+                                }
+                              }),
+                        );
+                      },
+                    );
+                  }
+                }
+              },
+            ),
+          ),
+          const SizedBox(
+            height: 50,
+          ),
+          MyButton(
+            width: 250,
+            height: 40,
+            onPressed: () {
+              share();
+            },
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ShareStudentsModel {
+  String? studentName;
+  int? studentId;
+  ShareStudentsModel({this.studentId, this.studentName});
+
+  ShareStudentsModel.fromJson(Map<String, dynamic> json) {
+    studentName = json['studentName'];
+    studentId = json['studentId'];
   }
 }

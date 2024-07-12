@@ -4,14 +4,17 @@ import 'package:digitallibrary/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class TeacherStudentCourseTile extends StatelessWidget {
-  const TeacherStudentCourseTile(
-      {super.key,
-      required this.course,
-      required this.onPressed,
-      this.studentId});
+  const TeacherStudentCourseTile({
+    super.key,
+    required this.course,
+    required this.onPressed,
+    this.studentId,
+    this.role = "Student",
+  });
   final CourseModel course;
   final int? studentId;
   final Function(String) onPressed;
+  final String? role;
 
   @override
   Widget build(BuildContext context) {
@@ -66,22 +69,23 @@ class TeacherStudentCourseTile extends StatelessWidget {
             const SizedBox(
               width: 20,
             ),
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewPdfFileScreen(
-                      studentId: studentId!,
-                      path:
-                          "$fileBaseUrl/CourseContentFolder/${course.courseContentUriPath!}",
-                      name: course.courseCode!,
+            if (role != "Teacher")
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ViewPdfFileScreen(
+                        studentId: studentId!,
+                        path:
+                            "$fileBaseUrl/CourseContentFolder/${course.courseContentUriPath!}",
+                        name: course.courseCode!,
+                      ),
                     ),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.list),
-            ),
+                  );
+                },
+                icon: const Icon(Icons.list),
+              ),
           ],
         ),
       ),

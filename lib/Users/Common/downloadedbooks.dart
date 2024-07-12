@@ -108,23 +108,23 @@ class _DownloadedBookScreenState extends State<DownloadedBookScreen> {
       backgroundColor: const Color(backgroundColor),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: searchController,
-              decoration: const InputDecoration(
-                hintText: 'Search books...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                suffixIcon: Icon(Icons.search),
-              ),
-              onChanged: (value) {
-                setState(
-                    () {}); // Trigger a rebuild whenever the search query changes
-              },
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: TextField(
+          //     controller: searchController,
+          //     decoration: const InputDecoration(
+          //       hintText: 'Search books...',
+          //       border: OutlineInputBorder(
+          //         borderRadius: BorderRadius.all(Radius.circular(10)),
+          //       ),
+          //       suffixIcon: Icon(Icons.search),
+          //     ),
+          //     onChanged: (value) {
+          //       setState(
+          //           () {}); // Trigger a rebuild whenever the search query changes
+          //     },
+          //   ),
+          // ),
           Expanded(
             child: FutureBuilder<List<BookModel>>(
               future: futurebooks,

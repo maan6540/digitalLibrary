@@ -110,18 +110,6 @@ class _ViewDownloadedBookTocState extends State<ViewDownloadedBookToc> {
       appBar: const MyAppBar(title: "Book TOC"),
       body: Column(
         children: [
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: TextField(
-          //     controller: searchController,
-          //     decoration: const InputDecoration(
-          //       hintText: "Search",
-          //     ),
-          //     onChanged: (value) {
-          //       setState(() {});
-          //     },
-          //   ),
-          // ),
           Expanded(
             child: FutureBuilder<List<TocModel>>(
               future: futureToc,

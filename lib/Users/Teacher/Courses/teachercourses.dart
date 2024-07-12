@@ -73,6 +73,7 @@ class _TeacherCoursesScreenState extends State<TeacherCoursesScreen> {
                 itemCount: courses.length,
                 itemBuilder: (context, index) {
                   return TeacherStudentCourseTile(
+                    role: "Teacher",
                     course: courses[index],
                     onPressed: (p0) {
                       Navigator.push(
